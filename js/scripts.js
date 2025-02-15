@@ -1,0 +1,40 @@
+// Smooth scrolling to sections
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    section.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Auto-scroll testimonial slider
+document.addEventListener('DOMContentLoaded', () => {
+    const testimonialSlider = document.querySelector('.testimonial-slider');
+    let currentIndex = 0;
+    const testimonials = document.querySelectorAll('.testimonial');
+
+    function showNextTestimonial() {
+        currentIndex = (currentIndex + 1) % testimonials.length;
+        testimonialSlider.style.transform = `translateX(-${currentIndex * 320}px)`;
+    }
+
+    setInterval(showNextTestimonial, 5000); // Change every 5 seconds
+});
+
+// Apply Filters
+function applyFilters() {
+    const region = document.getElementById('region').value;
+    const price = document.getElementById('price').value;
+
+    // Example: Reload the page with query parameters
+    window.location.href = `marketplace.php?region=${region}&price=${price}`;
+}
+
+// Load Next Page
+function loadNextPage() {
+    // Example: Fetch next set of seedlings via AJAX or reload with offset
+    alert('Loading next page...');
+}
+
+// Load Previous Page
+function loadPreviousPage() {
+    // Example: Fetch previous set of seedlings via AJAX or reload with offset
+    alert('Loading previous page...');
+}
