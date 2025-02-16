@@ -1,4 +1,5 @@
 <?php
+include 'php/init.php'; // Start session and initialize configurations
 include 'php/header.php';
 
 if (isset($_GET['id'])) {

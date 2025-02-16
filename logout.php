@@ -1,4 +1,5 @@
 <?php
+include 'php/init.php'; // Start session and initialize configurations
 include 'php/db.php';
 
 // Destroy the session

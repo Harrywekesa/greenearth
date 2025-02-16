@@ -1,5 +1,7 @@
 <?php
+include 'php/init.php'; // Start session and initialize configurations
 include 'php/db.php';
+include 'php/header.php';
 
 $title = $_POST['title'];
 $first_name = $_POST['first_name'];

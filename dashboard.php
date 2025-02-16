@@ -1,7 +1,8 @@
-<?php include 'php/header.php'; ?>
+<?php 
+include 'php/init.php'; // Start session and initialize configurations
+include 'php/header.php'; 
 
-<!-- Check if the user is logged in -->
-<?php
+// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
     header("Location: login.php");
@@ -19,7 +20,21 @@ $user_id = $_SESSION['user_id'];
     <section class="profile-section">
         <h3>Profile</h3>
         <p>Name: <?php echo htmlspecialchars($_SESSION['username']); ?></p>
-        <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
+        <?php
+        // Fetch user details
+        $sql = "SELECT email, phone, town FROM users WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            echo '<p>Email: ' . htmlspecialchars($user['email']) . '</p>';
+            echo '<p>Phone: ' . htmlspecialchars($user['phone']) . '</p>';
+            echo '<p>Town: ' . htmlspecialchars($user['town']) . '</p>';
+        }
+        ?>
         <p><a href="profile.php" class="button">Edit Profile</a></p>
     </section>
 
@@ -38,7 +53,9 @@ $user_id = $_SESSION['user_id'];
         if ($result->num_rows > 0) {
             echo '<ul>';
             while ($row = $result->fetch_assoc()) {
-                echo '<li><strong>' . htmlspecialchars($row['title']) . '</strong> - ' . date("F j, Y", strtotime($row['event_date'])) . ' (' . htmlspecialchars($row['location']) . ')</li>';
+                echo '<li>';
+                echo '<strong>' . htmlspecialchars($row['title']) . '</strong> - ' . date("F j, Y", strtotime($row['event_date'])) . ' (' . htmlspecialchars($row['location']) . ')';
+                echo '</li>';
             }
             echo '</ul>';
         } else {
@@ -71,6 +88,7 @@ $user_id = $_SESSION['user_id'];
         } else {
             echo '<p>No enrolled programs yet.</p>';
         }
+        ?>
     </section>
 </section>
 

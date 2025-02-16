@@ -1,4 +1,5 @@
 <?php
+include 'php/init.php'; // Start session and initialize configurations
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

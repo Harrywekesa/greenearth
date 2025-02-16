@@ -61,3 +61,35 @@ window.onclick = function (event) {
         modal.style.display = 'none';
     }
 };
+
+function validatePassword() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+
+    if (password.length < 8) {
+        alert('Password must be at least 8 characters long.');
+        return false;
+    }
+
+    if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        return false;
+    }
+
+    return true;
+}
+
+function validateEmail(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
+function validateForm() {
+    const email = document.getElementById('email').value;
+    if (!validateEmail(email)) {
+        alert('Please enter a valid email address.');
+        return false;
+    }
+    return true;
+}
+

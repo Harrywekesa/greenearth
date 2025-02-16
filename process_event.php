@@ -1,5 +1,7 @@
 <?php
+include 'php/init.php'; // Start session and initialize configurations
 include 'php/db.php';
+include 'php/header.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = $_POST['title'];

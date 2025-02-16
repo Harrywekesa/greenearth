@@ -1,9 +1,10 @@
 <?php
+include 'php/init.php'; // Start session and initialize configurations
 include 'php/header.php';
 
 // Save the current page URL for redirection
 if (!isset($_SESSION['redirect_url'])) {
-    $_SESSION['redirect_url'] = isset($_GET['redirect']) ? $_GET['redirect'] : 'index.php';
+    $_SESSION['redirect_url'] = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : 'index.php';
 }
 
 $error_message = '';
@@ -11,6 +12,7 @@ $error_message = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
+    $remember_me = isset($_POST['remember_me']);
 
     include 'php/db.php';
 
@@ -28,6 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['first_name'] . ' ' . $user['last_name'];
             $_SESSION['role'] = $user['role'];
+
+            // Set remember me cookie if checked
+            if ($remember_me) {
+                setcookie('user_id', $user['id'], time() + (86400 * 30), "/"); // Cookie expires in 30 days
+            }
 
             // Redirect to the saved URL or homepage
             $redirect_url = isset($_SESSION['redirect_url']) ? $_SESSION['redirect_url'] : 'index.php';
@@ -50,11 +57,17 @@ if (!empty($error_message)) {
 echo '<form method="POST">';
 echo '<label for="email">Email:</label>';
 echo '<input type="email" id="email" name="email" required>';
+
 echo '<label for="password">Password:</label>';
 echo '<input type="password" id="password" name="password" required>';
+
+echo '<div class="form-actions">';
+echo '<label><input type="checkbox" id="remember_me" name="remember_me"> Remember Me</label>';
 echo '<button type="submit">Login</button>';
-echo '</form>';
+echo '</div>';
+
 echo '<p>Don\'t have an account? <a href="register.php">Register here</a>.</p>';
+echo '</form>';
 echo '</section>';
 
 include 'php/footer.php';

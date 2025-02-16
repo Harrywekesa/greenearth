@@ -1,4 +1,7 @@
-<?php include 'php/header.php'; ?>
+<?php 
+include 'php/init.php'; // Start session and initialize configurations
+include 'php/header.php'; 
+?>
 
 <!-- Check if the user is logged in -->
 <?php

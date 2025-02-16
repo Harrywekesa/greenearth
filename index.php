@@ -1,4 +1,6 @@
-<?php include 'php/header.php'; ?>
+<?php 
+include 'php/init.php'; // Start session and initialize configurations
+include 'php/header.php'; ?>
 
 <!-- Hero Section -->
 <section class="hero" style="background-image: url('images/nature1.png');">
@@ -28,21 +30,31 @@ By leveraging digital technology, GreenEarth simplifies access to information, p
 
 <!-- Features Section -->
 <section id="features" class="features">
-    <div class="feature">
-        <img src="images/tree-info.png" alt="Tree Species Info">
-        <h2>Tree Species Information Hub</h2>
-        <p>Discover tree species suitable for different regions in Kenya and their ecological benefits.</p>
-    </div>
-    <div class="feature">
-        <img src="images/marketplace.png" alt="Online Marketplace">
-        <h2>Online Tree Seedling Marketplace</h2>
-        <p>Purchase high-quality seedlings tailored to your geographical needs with convenient delivery options.</p>
-    </div>
-    <div class="feature">
-        <img src="images/community.png" alt="Community Engagement">
-        <h2>Community Engagement</h2>
-        <p>Join events, collaborate with others, and contribute to large-scale reforestation efforts across Kenya.</p>
-    </div>
+<section id="features" class="features">
+    <a href="tree_species.php" class="feature-link">
+        <div class="feature">
+            <img src="images/tree-info.png" alt="Tree Species Info">
+            <h2>Tree Species Information Hub</h2>
+            <p>Discover tree species suitable for different regions in Kenya and their ecological benefits.</p>
+        </div>
+    </a>
+
+    <a href="marketplace.php" class="feature-link">
+        <div class="feature">
+            <img src="images/marketplace.png" alt="Online Marketplace">
+            <h2>Online Tree Seedling Marketplace</h2>
+            <p>Purchase high-quality seedlings tailored to your geographical needs with convenient delivery options.</p>
+        </div>
+    </a>
+
+    <a href="community_engagement.php" class="feature-link">
+        <div class="feature">
+            <img src="images/community.png" alt="Community Engagement">
+            <h2>Community Engagement</h2>
+            <p>Join events, collaborate with others, and contribute to large-scale reforestation efforts across Kenya.</p>
+        </div>
+    </a>
+</section>
 </section>
 
 <!-- Upcoming Events Section -->

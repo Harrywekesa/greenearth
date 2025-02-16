@@ -1,4 +1,7 @@
-<?php include 'php/header.php'; ?>
+<?php 
+include 'php/init.php'; // Start session and initialize configurations
+include 'php/header.php'; 
+?>
 
 <section class="training">
     <h1>Training Programs</h1>
