@@ -592,6 +592,281 @@ footer {
     cursor: pointer;
 }
 
+/* View Cart Button */
+.cart-button {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.cart-button .button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.cart-button .button:hover {
+    background-color: #3e8e41;
+}
+
 .checkout button:hover {
     background-color: #3e8e41;
+}
+
+/* Event Details Page */
+.event-details {
+    padding: 20px;
+    text-align: center;
+}
+
+.event-details h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.event-details p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* Contacts Page */
+.contacts {
+    padding: 20px;
+    text-align: center;
+}
+
+.contacts form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.contacts label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.contacts input, .contacts textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.contacts button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.contacts button:hover {
+    background-color: #3e8e41;
+}
+
+/* Training Programs */
+.training-programs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.program-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    text-align: center;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.program-card:hover {
+    transform: scale(1.05);
+}
+
+.program-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.program-card p {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.program-card button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.program-card button:hover {
+    background-color: #3e8e41;
+}
+
+/* Events Banner */
+.events-banner {
+    background-color: #045704;
+    color: white;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.events-banner h1 {
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.events-banner p {
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+/* Filter Section */
+.filter-section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.filters label {
+    font-weight: bold;
+}
+
+.filters select, .filters input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Events Grid */
+.events-grid {
+    padding: 20px;
+}
+
+.events-grid h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.event-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.event-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    text-align: center;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.event-card:hover {
+    transform: scale(1.05);
+}
+
+.event-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.event-card p {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.event-card button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.event-card button:hover {
+    background-color: #3e8e41;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .event-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .filters {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filters label, .filters select, .filters input[type="date"] {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 999; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.5); /* Black backdrop with opacity */
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto; /* Center vertically */
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%; /* Max width */
+    max-width: 400px;
+    text-align: center;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
 }

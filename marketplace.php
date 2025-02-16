@@ -5,6 +5,10 @@
     <h1>Online Tree Seedling Marketplace</h1>
     <p>Discover and purchase high-quality tree seedlings tailored to your geographical needs.</p>
 </section>
+<!-- View Cart Button -->
+<section class="cart-button">
+    <a href="cart.php" class="button">View Cart</a>
+</section>
 
 <section class="filter-section">
     <div class="filters">

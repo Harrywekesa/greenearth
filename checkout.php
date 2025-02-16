@@ -1,10 +1,13 @@
 <?php
-include 'php/header.php';
+include 'php/db.php';
 
 // Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    echo '<p>Please <a href="login.php">log in</a> to proceed with checkout.</p>';
-    exit;
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!isset($_SESSION['user_id'])) {
+        $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI']; // Save the current page URL
+        header("Location: login.php");
+        exit;
+    }
 }
 
 // Get parameters from URL
@@ -15,8 +18,6 @@ if ($id <= 0 || $quantity <= 0) {
     echo '<p>Invalid request.</p>';
     exit;
 }
-
-include 'php/db.php';
 
 // Fetch seedling details
 $sql = "SELECT * FROM seedlings WHERE id = ?";

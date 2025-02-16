@@ -2,9 +2,12 @@
 include 'php/header.php';
 
 // Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    echo '<p>Please <a href="login.php">log in</a> to view your cart.</p>';
-    exit;
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!isset($_SESSION['user_id'])) {
+        $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI']; // Save the current page URL
+        header("Location: login.php");
+        exit;
+    }
 }
 
 if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {

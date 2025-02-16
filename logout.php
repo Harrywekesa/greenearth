@@ -1,6 +1,11 @@
 <?php
+include 'php/db.php';
+
+// Destroy the session
 session_start();
 session_destroy();
-header("Location: marketplace.php");
+
+// Redirect to the homepage
+header("Location: index.php");
 exit;
 ?>

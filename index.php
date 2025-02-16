@@ -92,7 +92,7 @@ By leveraging digital technology, GreenEarth simplifies access to information, p
 <section class="cta">
     <h2>Join the Movement</h2>
     <p>Every tree planted is a step towards a sustainable future. Let's work together to restore our planet!</p>
-    <button onclick="location.href='contact.php'">Get Involved</button>
+    <button onclick="location.href='contacts.php'">Get Involved</button>
 </section>
 
 <?php include 'php/footer.php'; ?>

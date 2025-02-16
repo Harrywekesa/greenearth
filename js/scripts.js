@@ -38,3 +38,26 @@ function loadPreviousPage() {
     // Example: Fetch previous set of seedlings via AJAX or reload with offset
     alert('Loading previous page...');
 }
+
+// Get modal elements
+const modal = document.getElementById('success-modal');
+const modalContent = document.getElementById('success-message');
+const closeBtn = document.getElementsByClassName('close')[0];
+
+// Open modal with message
+function showModal(message) {
+    modalContent.textContent = message;
+    modal.style.display = 'block';
+}
+
+// Close modal
+closeBtn.onclick = function () {
+    modal.style.display = 'none';
+};
+
+// Close modal when clicking outside
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+};

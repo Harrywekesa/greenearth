@@ -1,11 +1,7 @@
 <?php
 include 'php/header.php';
 
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    echo '<p>Please <a href="login.php">log in</a> to add items to your cart.</p>';
-    exit;
-}
+
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
