@@ -1254,6 +1254,7 @@ form button:hover {
     color: #4CAF50;
 }
 
+
 /* Profile Section */
 .profile-section {
     margin-bottom: 20px;
@@ -1439,5 +1440,102 @@ form button:hover {
 
     .admin-dashboard h2, .admin-dashboard h3 {
         font-size: 20px;
+    }
+}
+
+/* Edit Pages */
+.edit-page {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.edit-page h2 {
+    font-size: 24px;
+    color: #4CAF50;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.edit-page label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.edit-page input[type="text"],
+.edit-page input[type="email"],
+.edit-page input[type="date"],
+.edit-page textarea,
+.edit-page select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.edit-page input[type="text"]:focus,
+.edit-page input[type="email"]:focus,
+.edit-page input[type="date"]:focus,
+.edit-page textarea:focus,
+.edit-page select:focus {
+    border-color: #4CAF50;
+}
+
+.edit-page button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.edit-page button:hover {
+    background-color: #3e8e41;
+}
+
+/* Error and Success Messages */
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.success-message {
+    color: green;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .edit-page {
+        padding: 15px;
+    }
+
+    .edit-page input[type="text"],
+    .edit-page input[type="email"],
+    .edit-page input[type="date"],
+    .edit-page textarea,
+    .edit-page select {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .edit-page button {
+        font-size: 14px;
+        padding: 8px 15px;
     }
 }

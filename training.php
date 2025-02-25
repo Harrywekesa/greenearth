@@ -4,7 +4,8 @@ include 'php/header.php';
 ?>
 
 <section class="training">
-    <h1>Training Programs</h1>
+    <section class="dashboard">
+    <h2>Training Programs</h2>
     <p>Enhance your skills in sustainable forestry, eco-entrepreneurship, and climate adaptation.</p>
 
     <div class="training-programs">
@@ -29,6 +30,7 @@ include 'php/header.php';
         }
         ?>
     </div>
+    </section>
 </section>
 
 <script>
