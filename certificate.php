@@ -1,10 +1,8 @@
 <?php 
 include 'php/init.php'; // Start session and initialize configurations
 include 'php/header.php'; 
-?>
 
-<!-- Check if the user is logged in -->
-<?php
+// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
     header("Location: login.php");
@@ -50,6 +48,12 @@ if ($program_result->num_rows > 0) {
 ?>
 
 <section class="certificate">
+    <header class="certificate-header">
+        <!-- Logos -->
+        <img src="images/logo.png" alt="GreenEarth Logo" class="greenearth-logo">
+        <img src="images/kenya-logo.png" alt="Republic of Kenya Logo" class="kenya-logo">
+    </header>
+
     <h1>Certificate of Completion</h1>
     <p>This certifies that</p>
     <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
@@ -58,7 +62,10 @@ if ($program_result->num_rows > 0) {
     <p><strong>Duration:</strong> <?php echo htmlspecialchars($program['duration']); ?></p>
     <p><strong>Location:</strong> <?php echo htmlspecialchars($program['location']); ?></p>
     <p><strong>Date Completed:</strong> <?php echo date("F j, Y"); ?></p>
-    <p>Issued by GreenEarth.</p>
+    <p>Issued by GreenEarth in collaboration with the Republic of Kenya.</p>
+
+    <!-- Download Button -->
+    <button onclick="downloadCertificate()" class="download-button">Download Certificate</button>
 </section>
 
 <style>
@@ -72,6 +79,27 @@ if ($program_result->num_rows > 0) {
         margin: 50px auto;
         max-width: 600px;
         font-family: Arial, sans-serif;
+        position: relative; /* For logo positioning */
+    }
+
+    .certificate-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .greenearth-logo, .kenya-logo {
+        width: 100px; /* Set fixed size for logos */
+        height: auto;
+    }
+
+    .greenearth-logo {
+        margin-left: 20px;
+    }
+
+    .kenya-logo {
+        margin-right: 20px;
     }
 
     .certificate h1 {
@@ -88,12 +116,48 @@ if ($program_result->num_rows > 0) {
         font-size: 16px;
         margin: 5px 0;
     }
+
+    .download-button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+    }
+
+    .download-button:hover {
+        background-color: #3e8e41;
+    }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-    window.onload = function () {
-        showModal("Your certificate has been generated!");
-    };
+    function downloadCertificate() {
+        const { jsPDF } = window.jspdf;
+
+        // Get the certificate content
+        const certificateContent = document.querySelector('.certificate').innerHTML;
+
+        // Create a new PDF instance
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        // Add the certificate content to the PDF
+        pdf.html(certificateContent, {
+            callback: function (pdf) {
+                pdf.save('certificate.pdf'); // Save the PDF with a filename
+            },
+            x: 10, // Horizontal offset
+            y: 10, // Vertical offset
+            width: 190 // Width of the content in the PDF
+        });
+    }
 </script>
 
 <?php include 'php/footer.php'; ?>

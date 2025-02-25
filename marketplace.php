@@ -8,56 +8,63 @@ include 'php/header.php';
     <h1>Online Tree Seedling Marketplace</h1>
     <p>Discover and purchase high-quality tree seedlings tailored to your geographical needs.</p>
 </section>
+
 <!-- View Cart Button -->
 <section class="cart-button">
     <a href="cart.php" class="button">View Cart</a>
 </section>
 
+<!-- Filter Section -->
 <section class="filter-section">
     <div class="filters">
         <form id="filter-form" method="GET">
-            <!-- Region Filter -->
-            <label for="region">Region:</label>
-            <select id="region" name="region" onchange="this.form.submit()">
-                <option value="all" <?php echo (!isset($_GET['region']) || $_GET['region'] == 'all') ? 'selected' : ''; ?>>All Regions</option>
-                <option value="nairobi" <?php echo (isset($_GET['region']) && $_GET['region'] == 'nairobi') ? 'selected' : ''; ?>>Nairobi</option>
-                <option value="kitale" <?php echo (isset($_GET['region']) && $_GET['region'] == 'kitale') ? 'selected' : ''; ?>>Kitale</option>
-                <option value="eldoret" <?php echo (isset($_GET['region']) && $_GET['region'] == 'eldoret') ? 'selected' : ''; ?>>Eldoret</option>
-            </select>
+            <!-- Split filters into two columns -->
+            <div class="filter-column">
+                <!-- Region Filter -->
+                <label for="region">Region:</label>
+                <select id="region" name="region" onchange="this.form.submit()">
+                    <option value="all" <?php echo (!isset($_GET['region']) || $_GET['region'] == 'all') ? 'selected' : ''; ?>>All Regions</option>
+                    <option value="nairobi" <?php echo (isset($_GET['region']) && $_GET['region'] == 'nairobi') ? 'selected' : ''; ?>>Nairobi</option>
+                    <option value="kitale" <?php echo (isset($_GET['region']) && $_GET['region'] == 'kitale') ? 'selected' : ''; ?>>Kitale</option>
+                    <option value="eldoret" <?php echo (isset($_GET['region']) && $_GET['region'] == 'eldoret') ? 'selected' : ''; ?>>Eldoret</option>
+                </select>
 
-            <!-- Price Range Filter -->
-            <label for="price">Price Range:</label>
-            <input type="range" id="price" name="price" min="0" max="500" value="<?php echo isset($_GET['price']) ? htmlspecialchars($_GET['price']) : '500'; ?>" oninput="this.form.submit()">
-            <span>Selected Price: KES <?php echo isset($_GET['price']) ? htmlspecialchars($_GET['price']) : '500'; ?></span>
+                <!-- Price Range Filter -->
+                <label for="price">Price Range:</label>
+                <input type="range" id="price" name="price" min="0" max="500" value="<?php echo isset($_GET['price']) ? htmlspecialchars($_GET['price']) : '500'; ?>" oninput="this.form.submit()">
+                <span>Selected Price: KES <?php echo isset($_GET['price']) ? htmlspecialchars($_GET['price']) : '500'; ?></span>
+            </div>
 
-            <!-- Tree Height Filter -->
-            <label for="height">Tree Height:</label>
-            <select id="height" name="height" onchange="this.form.submit()">
-                <option value="all" <?php echo (!isset($_GET['height']) || $_GET['height'] == 'all') ? 'selected' : ''; ?>>All Heights</option>
-                <option value="tall" <?php echo (isset($_GET['height']) && $_GET['height'] == 'tall') ? 'selected' : ''; ?>>Tall Trees</option>
-                <option value="short" <?php echo (isset($_GET['height']) && $_GET['height'] == 'short') ? 'selected' : ''; ?>>Short Trees</option>
-            </select>
+            <div class="filter-column">
+                <!-- Tree Height Filter -->
+                <label for="height">Tree Height:</label>
+                <select id="height" name="height" onchange="this.form.submit()">
+                    <option value="all" <?php echo (!isset($_GET['height']) || $_GET['height'] == 'all') ? 'selected' : ''; ?>>All Heights</option>
+                    <option value="tall" <?php echo (isset($_GET['height']) && $_GET['height'] == 'tall') ? 'selected' : ''; ?>>Tall Trees</option>
+                    <option value="short" <?php echo (isset($_GET['height']) && $_GET['height'] == 'short') ? 'selected' : ''; ?>>Short Trees</option>
+                </select>
 
-            <!-- Fruiting Trees Filter -->
-            <label for="fruit">Fruiting Trees:</label>
-            <select id="fruit" name="fruit" onchange="this.form.submit()">
-                <option value="all" <?php echo (!isset($_GET['fruit']) || $_GET['fruit'] == 'all') ? 'selected' : ''; ?>>All Types</option>
-                <option value="edible" <?php echo (isset($_GET['fruit']) && $_GET['fruit'] == 'edible') ? 'selected' : ''; ?>>Edible Fruiting Trees</option>
-                <option value="non-edible" <?php echo (isset($_GET['fruit']) && $_GET['fruit'] == 'non-edible') ? 'selected' : ''; ?>>Non-Edible Trees</option>
-            </select>
+                <!-- Fruiting Trees Filter -->
+                <label for="fruit">Fruiting Trees:</label>
+                <select id="fruit" name="fruit" onchange="this.form.submit()">
+                    <option value="all" <?php echo (!isset($_GET['fruit']) || $_GET['fruit'] == 'all') ? 'selected' : ''; ?>>All Types</option>
+                    <option value="edible" <?php echo (isset($_GET['fruit']) && $_GET['fruit'] == 'edible') ? 'selected' : ''; ?>>Edible Fruiting Trees</option>
+                    <option value="non-edible" <?php echo (isset($_GET['fruit']) && $_GET['fruit'] == 'non-edible') ? 'selected' : ''; ?>>Non-Edible Trees</option>
+                </select>
 
-            <!-- Purpose Filter -->
-            <label for="purpose">Purpose:</label>
-            <select id="purpose" name="purpose" onchange="this.form.submit()">
-                <option value="all" <?php echo (!isset($_GET['purpose']) || $_GET['purpose'] == 'all') ? 'selected' : ''; ?>>All Purposes</option>
-                <option value="ornamental" <?php echo (isset($_GET['purpose']) && $_GET['purpose'] == 'ornamental') ? 'selected' : ''; ?>>Ornamental</option>
-                <option value="timber" <?php echo (isset($_GET['purpose']) && $_GET['purpose'] == 'timber') ? 'selected' : ''; ?>>Timber</option>
-                <option value="shade" <?php echo (isset($_GET['purpose']) && $_GET['purpose'] == 'shade') ? 'selected' : ''; ?>>Shade</option>
-            </select>
+                <!-- Purpose Filter -->
+                <label for="purpose">Purpose:</label>
+                <select id="purpose" name="purpose" onchange="this.form.submit()">
+                    <option value="all" <?php echo (!isset($_GET['purpose']) || $_GET['purpose'] == 'all') ? 'selected' : ''; ?>>All Purposes</option>
+                    <option value="ornamental" <?php echo (isset($_GET['purpose']) && $_GET['purpose'] == 'ornamental') ? 'selected' : ''; ?>>Ornamental</option>
+                    <option value="timber" <?php echo (isset($_GET['purpose']) && $_GET['purpose'] == 'timber') ? 'selected' : ''; ?>>Timber</option>
+                    <option value="shade" <?php echo (isset($_GET['purpose']) && $_GET['purpose'] == 'shade') ? 'selected' : ''; ?>>Shade</option>
+                </select>
         </form>
     </div>
 </section>
 
+<!-- Seedlings Section -->
 <section class="seedlings">
     <h2>Browse Available Seedlings</h2>
     <div class="seedlings-grid">
@@ -119,7 +126,7 @@ include 'php/header.php';
         }
         ?>
     </div>
-</section>+
+</section>
 
 <!-- Pagination -->
 <section class="pagination">
@@ -135,6 +142,18 @@ include 'php/header.php';
         $count_sql .= " AND price <= $price";
     }
 
+    if ($height !== 'all') {
+        $count_sql .= " AND height = '$height'";
+    }
+
+    if ($fruit !== 'all') {
+        $count_sql .= " AND fruit = '$fruit'";
+    }
+
+    if ($purpose !== 'all') {
+        $count_sql .= " AND purpose = '$purpose'";
+    }
+
     $count_result = $conn->query($count_sql);
     $total_items = $count_result->fetch_assoc()['total'];
     $total_pages = ceil($total_items / $items_per_page);
@@ -145,7 +164,7 @@ include 'php/header.php';
 
         for ($i = 1; $i <= $total_pages; $i++) {
             $active = ($i == $page) ? 'active' : '';
-            echo '<li class="pagination-item ' . $active . '"><a href="?region=' . $region . '&price=' . $price . '&page=' . $i . '">' . $i . '</a></li>';
+            echo '<li class="pagination-item ' . $active . '"><a href="?region=' . $region . '&price=' . $price . '&height=' . $height . '&fruit=' . $fruit . '&purpose=' . $purpose . '&page=' . $i . '">' . $i . '</a></li>';
         }
 
         echo '</ul>';

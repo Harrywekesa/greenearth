@@ -10,12 +10,13 @@ if (!isset($_SESSION['redirect_url'])) {
 $error_message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
     $remember_me = isset($_POST['remember_me']);
 
     include 'php/db.php';
 
+    // Fetch user by email
     $sql = "SELECT * FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -24,6 +25,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
+
+        // Debugging: Check stored hash
+        echo "<pre>";
+        echo "Stored Password Hash: " . htmlspecialchars($user['password']) . "\n";
+        echo "</pre>";
 
         // Verify the password
         if (password_verify($password, $user['password'])) {
@@ -36,11 +42,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 setcookie('user_id', $user['id'], time() + (86400 * 30), "/"); // Cookie expires in 30 days
             }
 
-            // Redirect to the saved URL or homepage
-            $redirect_url = isset($_SESSION['redirect_url']) ? $_SESSION['redirect_url'] : 'index.php';
-            unset($_SESSION['redirect_url']); // Clear the redirect URL
-            header("Location: " . $redirect_url);
-            exit;
+            // Redirect based on role
+            if ($user['role'] === 'admin') {
+                header("Location: admin.php");
+                exit;
+            } else {
+                $redirect_url = isset($_SESSION['redirect_url']) ? $_SESSION['redirect_url'] : 'index.php';
+                unset($_SESSION['redirect_url']); // Clear the redirect URL
+                header("Location: " . $redirect_url);
+                exit;
+            }
         } else {
             $error_message = 'Invalid email or password.';
         }
@@ -57,15 +68,12 @@ if (!empty($error_message)) {
 echo '<form method="POST">';
 echo '<label for="email">Email:</label>';
 echo '<input type="email" id="email" name="email" required>';
-
 echo '<label for="password">Password:</label>';
 echo '<input type="password" id="password" name="password" required>';
-
 echo '<div class="form-actions">';
 echo '<label><input type="checkbox" id="remember_me" name="remember_me"> Remember Me</label>';
 echo '<button type="submit">Login</button>';
 echo '</div>';
-
 echo '<p>Don\'t have an account? <a href="register.php">Register here</a>.</p>';
 echo '</form>';
 echo '</section>';

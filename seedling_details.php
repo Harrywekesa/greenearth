@@ -1,74 +1,78 @@
-<?php
+<?php 
 include 'php/init.php'; // Start session and initialize configurations
-include 'php/header.php';
+include 'php/header.php'; 
 
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
+    header("Location: login.php");
+    exit;
+}
 
+// Get seedling ID from URL
+$seedling_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-    include 'php/db.php';
+if ($seedling_id <= 0) {
+    echo '<p>Invalid seedling ID.</p>';
+    exit;
+}
 
-    $sql = "SELECT * FROM seedlings WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
+include 'php/db.php';
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-    } else {
-        echo '<p>Seedling not found.</p>';
-        exit;
-    }
+// Fetch seedling details
+$sql = "SELECT * FROM seedlings WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $seedling_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $seedling = $result->fetch_assoc();
 } else {
-    echo '<p>No seedling ID provided.</p>';
+    echo '<p>Seedling not found.</p>';
     exit;
 }
 ?>
 
 <section class="seedling-details">
     <div class="details-header">
-        <h1><?php echo htmlspecialchars($row['name']); ?></h1>
-        <p><strong>Price:</strong> KES <?php echo number_format($row['price'], 2); ?></p>
+        <h1><?php echo htmlspecialchars($seedling['name'] ?? 'Unknown Seedling'); ?></h1>
+        <p><strong>Price:</strong> KES <?php echo number_format($seedling['price'] ?? 0, 2); ?></p>
     </div>
+
     <div class="details-content">
-        <img src="<?php echo htmlspecialchars($row['image']); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>" class="detail-image">
-        <div class="info">
-            <h2>Description</h2>
-            <p><?php echo htmlspecialchars($row['description']); ?></p>
+        <img src="<?php echo htmlspecialchars($seedling['image'] ?? 'images/default-tree.jpg'); ?>" alt="<?php echo htmlspecialchars($seedling['name'] ?? 'Unknown Seedling'); ?>" class="detail-image">
 
-            <h2>Details</h2>
-            <ul>
-                <li><strong>Region:</strong> <?php echo htmlspecialchars($row['region']); ?></li>
-                <li><strong>Height:</strong> <?php echo htmlspecialchars($row['height']); ?></li>
-                <li><strong>Fruiting:</strong> <?php echo htmlspecialchars($row['fruit']); ?></li>
-                <li><strong>Purpose:</strong> <?php echo htmlspecialchars($row['purpose']); ?></li>
-            </ul>
+        <h2>Description</h2>
+        <p><?php echo nl2br(htmlspecialchars($seedling['description'] ?? 'No description available.')); ?></p>
 
-            <div class="buttons">
-                <button onclick="addToCart(<?php echo $row['id']; ?>)">Add to Cart</button>
-                <button onclick="buyNow(<?php echo $row['id']; ?>)">Buy Now</button>
-            </div>
+        <h2>Details</h2>
+        <ul>
+            <li><strong>Region:</strong> <?php echo htmlspecialchars($seedling['region'] ?? 'Not specified'); ?></li>
+            <li><strong>Height:</strong> <?php echo htmlspecialchars($seedling['height'] ?? 'Not specified'); ?></li>
+            <li><strong>Fruiting:</strong> <?php echo htmlspecialchars($seedling['fruit'] ?? 'Not specified'); ?></li>
+            <li><strong>Purpose:</strong> <?php echo htmlspecialchars($seedling['purpose'] ?? 'Not specified'); ?></li>
+        </ul>
+
+        <div class="buttons">
+            <button onclick="addToCart(<?php echo $seedling_id; ?>)">Add to Cart</button>
+            <button onclick="buyNow(<?php echo $seedling_id; ?>)">Buy Now</button>
         </div>
     </div>
 </section>
 
 <script>
     function addToCart(id) {
-        const quantity = prompt("Enter the number of seedlings you want:");
-        if (quantity && !isNaN(quantity)) {
-            window.location.href = 'add_to_cart.php?id=' + id + '&quantity=' + quantity;
-        } else {
-            alert("Invalid quantity!");
+        const confirmMessage = "Are you sure you want to add this seedling to your cart?";
+        if (confirm(confirmMessage)) {
+            window.location.href = 'add_to_cart.php?id=' + id;
         }
     }
 
     function buyNow(id) {
-        const quantity = prompt("Enter the number of seedlings you want:");
-        if (quantity && !isNaN(quantity)) {
-            window.location.href = 'checkout.php?id=' + id + '&quantity=' + quantity;
-        } else {
-            alert("Invalid quantity!");
+        const confirmMessage = "Are you sure you want to purchase this seedling?";
+        if (confirm(confirmMessage)) {
+            window.location.href = 'checkout.php?id=' + id;
         }
     }
 </script>
