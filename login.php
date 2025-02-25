@@ -10,8 +10,8 @@ if (!isset($_SESSION['redirect_url'])) {
 $error_message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
+    $email = $_POST['email'];
+    $password = $_POST['password'];
     $remember_me = isset($_POST['remember_me']);
 
     include 'php/db.php';
@@ -26,15 +26,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
-        // Debugging: Check stored hash
-        echo "<pre>";
-        echo "Stored Password Hash: " . htmlspecialchars($user['password']) . "\n";
-        echo "</pre>";
-
         // Verify the password
         if (password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['first_name'] . ' ' . $user['last_name'];
+
+            // Check user role
             $_SESSION['role'] = $user['role'];
 
             // Set remember me cookie if checked
