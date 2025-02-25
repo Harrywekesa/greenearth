@@ -1350,3 +1350,94 @@ form button:hover {
         display: none;
     }
 }
+
+/* Admin Dashboard */
+.admin-dashboard {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.admin-dashboard h2 {
+    font-size: 28px;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+.admin-dashboard section {
+    margin-bottom: 30px;
+}
+
+.admin-dashboard h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* Admin Tables */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.admin-table thead tr {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+.admin-table th, .admin-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.admin-table tbody tr:nth-child(even) {
+    background-color: #f4f4f9; /* Alternating row colors */
+}
+
+.admin-table tbody tr:hover {
+    background-color: #e7f4ea; /* Hover effect */
+}
+
+/* Action Links */
+.action-link {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.action-link:hover {
+    text-decoration: underline;
+    color: #3e8e41;
+}
+
+/* Buttons */
+.button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.button:hover {
+    background-color: #3e8e41;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-table {
+        font-size: 14px;
+    }
+
+    .admin-dashboard h2, .admin-dashboard h3 {
+        font-size: 20px;
+    }
+}
