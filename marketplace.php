@@ -14,13 +14,11 @@ include 'php/header.php';
     <a href="cart.php" class="button">View Cart</a>
 </section>
 
-<!-- Filter Section -->
 <section class="filter-section">
     <div class="filters">
-        <form id="filter-form" method="GET">
-            <!-- Split filters into two columns -->
-            <div class="filter-column">
-                <!-- Region Filter -->
+        <!-- Region Filter -->
+        <div class="filter-card">
+            <form id="region-form" method="GET">
                 <label for="region">Region:</label>
                 <select id="region" name="region" onchange="this.form.submit()">
                     <option value="all" <?php echo (!isset($_GET['region']) || $_GET['region'] == 'all') ? 'selected' : ''; ?>>All Regions</option>
@@ -28,31 +26,65 @@ include 'php/header.php';
                     <option value="kitale" <?php echo (isset($_GET['region']) && $_GET['region'] == 'kitale') ? 'selected' : ''; ?>>Kitale</option>
                     <option value="eldoret" <?php echo (isset($_GET['region']) && $_GET['region'] == 'eldoret') ? 'selected' : ''; ?>>Eldoret</option>
                 </select>
+                <!-- Preserve other filters when submitting -->
+                <input type="hidden" name="price" value="<?php echo isset($_GET['price']) ? htmlspecialchars($_GET['price']) : '500'; ?>">
+                <input type="hidden" name="height" value="<?php echo isset($_GET['height']) ? htmlspecialchars($_GET['height']) : 'all'; ?>">
+                <input type="hidden" name="fruit" value="<?php echo isset($_GET['fruit']) ? htmlspecialchars($_GET['fruit']) : 'all'; ?>">
+                <input type="hidden" name="purpose" value="<?php echo isset($_GET['purpose']) ? htmlspecialchars($_GET['purpose']) : 'all'; ?>">
+            </form>
+        </div>
 
-                <!-- Price Range Filter -->
+        <!-- Price Range Filter -->
+        <div class="filter-card">
+            <form id="price-form" method="GET">
                 <label for="price">Price Range:</label>
                 <input type="range" id="price" name="price" min="0" max="500" value="<?php echo isset($_GET['price']) ? htmlspecialchars($_GET['price']) : '500'; ?>" oninput="this.form.submit()">
                 <span>Selected Price: KES <?php echo isset($_GET['price']) ? htmlspecialchars($_GET['price']) : '500'; ?></span>
-            </div>
+                <!-- Preserve other filters when submitting -->
+                <input type="hidden" name="region" value="<?php echo isset($_GET['region']) ? htmlspecialchars($_GET['region']) : 'all'; ?>">
+                <input type="hidden" name="height" value="<?php echo isset($_GET['height']) ? htmlspecialchars($_GET['height']) : 'all'; ?>">
+                <input type="hidden" name="fruit" value="<?php echo isset($_GET['fruit']) ? htmlspecialchars($_GET['fruit']) : 'all'; ?>">
+                <input type="hidden" name="purpose" value="<?php echo isset($_GET['purpose']) ? htmlspecialchars($_GET['purpose']) : 'all'; ?>">
+            </form>
+        </div>
 
-            <div class="filter-column">
-                <!-- Tree Height Filter -->
+        <!-- Tree Height Filter -->
+        <div class="filter-card">
+            <form id="height-form" method="GET">
                 <label for="height">Tree Height:</label>
                 <select id="height" name="height" onchange="this.form.submit()">
                     <option value="all" <?php echo (!isset($_GET['height']) || $_GET['height'] == 'all') ? 'selected' : ''; ?>>All Heights</option>
                     <option value="tall" <?php echo (isset($_GET['height']) && $_GET['height'] == 'tall') ? 'selected' : ''; ?>>Tall Trees</option>
                     <option value="short" <?php echo (isset($_GET['height']) && $_GET['height'] == 'short') ? 'selected' : ''; ?>>Short Trees</option>
                 </select>
+                <!-- Preserve other filters when submitting -->
+                <input type="hidden" name="region" value="<?php echo isset($_GET['region']) ? htmlspecialchars($_GET['region']) : 'all'; ?>">
+                <input type="hidden" name="price" value="<?php echo isset($_GET['price']) ? htmlspecialchars($_GET['price']) : '500'; ?>">
+                <input type="hidden" name="fruit" value="<?php echo isset($_GET['fruit']) ? htmlspecialchars($_GET['fruit']) : 'all'; ?>">
+                <input type="hidden" name="purpose" value="<?php echo isset($_GET['purpose']) ? htmlspecialchars($_GET['purpose']) : 'all'; ?>">
+            </form>
+        </div>
 
-                <!-- Fruiting Trees Filter -->
+        <!-- Fruiting Trees Filter -->
+        <div class="filter-card">
+            <form id="fruit-form" method="GET">
                 <label for="fruit">Fruiting Trees:</label>
                 <select id="fruit" name="fruit" onchange="this.form.submit()">
                     <option value="all" <?php echo (!isset($_GET['fruit']) || $_GET['fruit'] == 'all') ? 'selected' : ''; ?>>All Types</option>
                     <option value="edible" <?php echo (isset($_GET['fruit']) && $_GET['fruit'] == 'edible') ? 'selected' : ''; ?>>Edible Fruiting Trees</option>
                     <option value="non-edible" <?php echo (isset($_GET['fruit']) && $_GET['fruit'] == 'non-edible') ? 'selected' : ''; ?>>Non-Edible Trees</option>
                 </select>
+                <!-- Preserve other filters when submitting -->
+                <input type="hidden" name="region" value="<?php echo isset($_GET['region']) ? htmlspecialchars($_GET['region']) : 'all'; ?>">
+                <input type="hidden" name="price" value="<?php echo isset($_GET['price']) ? htmlspecialchars($_GET['price']) : '500'; ?>">
+                <input type="hidden" name="height" value="<?php echo isset($_GET['height']) ? htmlspecialchars($_GET['height']) : 'all'; ?>">
+                <input type="hidden" name="purpose" value="<?php echo isset($_GET['purpose']) ? htmlspecialchars($_GET['purpose']) : 'all'; ?>">
+            </form>
+        </div>
 
-                <!-- Purpose Filter -->
+        <!-- Purpose Filter -->
+        <div class="filter-card">
+            <form id="purpose-form" method="GET">
                 <label for="purpose">Purpose:</label>
                 <select id="purpose" name="purpose" onchange="this.form.submit()">
                     <option value="all" <?php echo (!isset($_GET['purpose']) || $_GET['purpose'] == 'all') ? 'selected' : ''; ?>>All Purposes</option>
@@ -60,7 +92,13 @@ include 'php/header.php';
                     <option value="timber" <?php echo (isset($_GET['purpose']) && $_GET['purpose'] == 'timber') ? 'selected' : ''; ?>>Timber</option>
                     <option value="shade" <?php echo (isset($_GET['purpose']) && $_GET['purpose'] == 'shade') ? 'selected' : ''; ?>>Shade</option>
                 </select>
-        </form>
+                <!-- Preserve other filters when submitting -->
+                <input type="hidden" name="region" value="<?php echo isset($_GET['region']) ? htmlspecialchars($_GET['region']) : 'all'; ?>">
+                <input type="hidden" name="price" value="<?php echo isset($_GET['price']) ? htmlspecialchars($_GET['price']) : '500'; ?>">
+                <input type="hidden" name="height" value="<?php echo isset($_GET['height']) ? htmlspecialchars($_GET['height']) : 'all'; ?>">
+                <input type="hidden" name="fruit" value="<?php echo isset($_GET['fruit']) ? htmlspecialchars($_GET['fruit']) : 'all'; ?>">
+            </form>
+        </div>
     </div>
 </section>
 

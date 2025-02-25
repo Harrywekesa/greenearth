@@ -511,34 +511,52 @@ header nav ul li a:hover {
 }
 
 .filters {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
-    flex-wrap: wrap;
+    display: flex; /* Arrange cards horizontally */
+    justify-content: space-between; /* Space them evenly */
+    gap: 20px; /* Add spacing between cards */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
-.filter-column {
-    flex: 1;
-    max-width: 50%; /* Limit width for better alignment */
+.filter-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1; /* Make each card flexible */
+    max-width: 200px; /* Limit card width */
+    text-align: left; /* Align content to the left */
 }
 
-.filter-column label {
+.filter-card label {
     font-weight: bold;
     margin-bottom: 5px;
 }
 
-.filter-column select, .filter-column input[type="range"] {
+.filter-card select, .filter-card input[type="range"] {
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-.filter-column span {
+.filter-card span {
     font-size: 14px;
     color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column; /* Stack cards vertically */
+        align-items: flex-start; /* Align cards to the left */
+    }
+
+    .filter-card {
+        max-width: 100%; /* Allow full width on smaller screens */
+        margin-bottom: 15px;
+    }
 }
 
 /* Seedlings Grid */
@@ -1027,21 +1045,39 @@ footer {
 }
 
 .filters {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
+    display: flex; /* Arrange cards horizontally */
+    justify-content: space-between; /* Space them evenly */
+    gap: 20px; /* Add spacing between cards */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
-.filters label {
-    font-weight: bold;
-}
-
-.filters select, .filters input[type="date"] {
-    padding: 8px;
+.filter-card {
+    background-color: white;
     border: 1px solid #ddd;
     border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1; /* Make each card flexible */
+    max-width: 200px; /* Limit card width */
+    text-align: left; /* Align content to the left */
+}
+
+.filter-card label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.filter-card select, .filter-card input[type="range"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.filter-card span {
+    font-size: 14px;
+    color: #666;
 }
 
 /* Events Grid */
