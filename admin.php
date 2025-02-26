@@ -1,14 +1,13 @@
 <?php 
 include 'php/init.php'; // Start session and initialize configurations
 include 'php/header.php'; 
-?>
 
-<!-- Check if the user is an admin -->
-<?php
+// Check if the user is an admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: index.php");
     exit;
 }
+
 include 'php/db.php';
 ?>
 
@@ -32,7 +31,6 @@ include 'php/db.php';
                 <?php
                 $sql = "SELECT id, title, first_name, last_name, email, town FROM users ORDER BY created_at DESC";
                 $result = $conn->query($sql);
-
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo '<tr>';
@@ -70,7 +68,6 @@ include 'php/db.php';
                 <?php
                 $sql = "SELECT * FROM events ORDER BY event_date DESC";
                 $result = $conn->query($sql);
-
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo '<tr>';
@@ -108,7 +105,6 @@ include 'php/db.php';
                 <?php
                 $sql = "SELECT * FROM training_programs ORDER BY created_at DESC";
                 $result = $conn->query($sql);
-
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo '<tr>';
@@ -128,6 +124,43 @@ include 'php/db.php';
             </tbody>
         </table>
     </section>
+
+    <section class="manage-seedlings">
+    <h3>Manage Seedlings</h3>
+    <a href="add_seedling.php" class="button">Add New Seedling</a>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Region</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $sql = "SELECT * FROM seedlings ORDER BY created_at DESC";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo '<tr>';
+                    echo '<td>' . htmlspecialchars($row['name']) . '</td>';
+                    echo '<td>KES ' . number_format($row['price'], 2) . '</td>';
+                    echo '<td>' . htmlspecialchars($row['region']) . '</td>';
+                    echo '<td>';
+                    echo '<a href="edit_seedling.php?id=' . $row['id'] . '" class="action-link">Edit</a> | ';
+                    echo '<a href="delete_seedling.php?id=' . $row['id'] . '" class="action-link" onclick="return confirm(\'Are you sure you want to delete this seedling?\')">Delete</a>';
+                    echo '</td>';
+                    echo '</tr>';
+                }
+            } else {
+                echo '<tr><td colspan="4">No seedlings available.</td></tr>';
+            }
+            ?>
+        </tbody>
+    </table>
+</section>
 </section>
 
 <?php include 'php/footer.php'; ?>

@@ -1575,3 +1575,95 @@ form button:hover {
         padding: 8px 15px;
     }
 }
+
+/* Add Seedling Page */
+.add-seedling {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.add-seedling h2 {
+    font-size: 24px;
+    color: #4CAF50;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.add-seedling label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.add-seedling input[type="text"],
+.add-seedling input[type="number"],
+.add-seedling select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.add-seedling textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.add-seedling button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+}
+
+.add-seedling button:hover {
+    background-color: #3e8e41;
+}
+
+/* Error and Success Messages */
+.error-message,
+.success-message {
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.error-message {
+    background-color: #fdd;
+    color: red;
+}
+
+.success-message {
+    background-color: #dff;
+    color: green;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .add-seedling input[type="text"],
+    .add-seedling input[type="number"],
+    .add-seedling select,
+    .add-seedling textarea {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .add-seedling button {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+}
