@@ -134,6 +134,11 @@ include 'php/db.php';
                 <th>Name</th>
                 <th>Price</th>
                 <th>Region</th>
+                <th>Height</th>
+                <th>Fruiting</th>
+                <th>Purpose</th>
+                <th>Stock</th>
+                <th>Image</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -148,6 +153,11 @@ include 'php/db.php';
                     echo '<td>' . htmlspecialchars($row['name']) . '</td>';
                     echo '<td>KES ' . number_format($row['price'], 2) . '</td>';
                     echo '<td>' . htmlspecialchars($row['region']) . '</td>';
+                    echo '<td>' . htmlspecialchars($row['height']) . '</td>';
+                    echo '<td>' . htmlspecialchars($row['fruit']) . '</td>';
+                    echo '<td>' . htmlspecialchars($row['purpose']) . '</td>';
+                    echo '<td>' . htmlspecialchars($row['stock']) . '</td>'; // Use 'stock' field
+                    echo '<td><img src="' . htmlspecialchars($row['image']) . '" alt="' . htmlspecialchars($row['name']) . '" style="width: 50px; height: auto;"></td>';
                     echo '<td>';
                     echo '<a href="edit_seedling.php?id=' . $row['id'] . '" class="action-link">Edit</a> | ';
                     echo '<a href="delete_seedling.php?id=' . $row['id'] . '" class="action-link" onclick="return confirm(\'Are you sure you want to delete this seedling?\')">Delete</a>';
@@ -155,7 +165,7 @@ include 'php/db.php';
                     echo '</tr>';
                 }
             } else {
-                echo '<tr><td colspan="4">No seedlings available.</td></tr>';
+                echo '<tr><td colspan="9">No seedlings available.</td></tr>';
             }
             ?>
         </tbody>

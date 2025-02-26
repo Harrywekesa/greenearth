@@ -1,5 +1,6 @@
 <?php
 include 'php/init.php'; // Start session and initialize configurations
+include 'php/header.php';
 
 // Check if the user is an admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
@@ -48,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Update seedling details
         $sql = "UPDATE seedlings SET name = ?, description = ?, price = ?, region = ?, height = ?, fruit = ?, purpose = ? WHERE id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssdsssi", $name, $description, $price, $region, $height, $fruit, $purpose, $seedling_id);
+        $stmt->bind_param("ssdsdssi", $name, $description, $price, $region, $height, $fruit, $purpose, $seedling_id);
 
         if ($stmt->execute()) {
             $success_message = 'Seedling updated successfully!';
