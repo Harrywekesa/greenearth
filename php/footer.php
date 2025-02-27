@@ -11,7 +11,7 @@
         </div>
 
         <div class="copyright">
-            <p>&copy; 2023 GreenEarth. All rights reserved.</p>
+            <p>&copy; 2025 GreenEarth. All rights reserved.</p>
         </div>
     </div>
 </footer>
