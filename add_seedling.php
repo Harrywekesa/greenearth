@@ -1,6 +1,5 @@
 <?php
 include 'php/init.php'; // Start session and initialize configurations
-include 'php/header.php';
 
 // Check if the user is an admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
@@ -12,16 +11,18 @@ include 'php/db.php';
 
 $error_message = '';
 $success_message = '';
+$image_preview = ''; // Variable to store image preview
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Capture form data
     $name = trim($_POST['name']);
     $description = trim($_POST['description']);
-    $price = (float)$_POST['price'];
+    $price = isset($_POST['price']) ? (float)$_POST['price'] : null;
     $region = trim($_POST['region']);
-    $height = trim($_POST['height']);
-    $fruit = trim($_POST['fruit']);
-    $purpose = trim($_POST['purpose']);
-    $stock = (int)$_POST['stock']; // Use 'stock' instead of 'No_in_stock'
+    $height = trim($_POST['height']) ?? 'tall'; // Default value: tall
+    $fruit = trim($_POST['fruit']) ?? 'non-edible'; // Default value: non-edible
+    $purpose = trim($_POST['purpose']) ?? 'shade'; // Default value: shade
+    $stock = isset($_POST['stock']) ? (int)$_POST['stock'] : 0;
 
     // Handle image upload
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
@@ -30,23 +31,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $upload_dir = 'images/seedlings/';
         $image_path = $upload_dir . $file_name;
 
+        // Ensure upload directory exists
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0777, true); // Create directory if it doesn't exist
         }
 
+        // Move uploaded file
         if (move_uploaded_file($tmp_name, $image_path)) {
+            echo "<p>Image uploaded successfully!</p>";
+
             // Insert seedling into the database
             $insert_sql = "INSERT INTO seedlings (name, description, price, image, region, height, fruit, purpose, stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($insert_sql);
-            $stmt->bind_param("ssdssssi", $name, $description, $price, $image_path, $region, $height, $fruit, $purpose, $stock);
 
-            if ($stmt->execute()) {
-                $success_message = 'Seedling added successfully!';
+            if (!$stmt) {
+                $error_message = 'Error preparing SQL statement: ' . $conn->error;
             } else {
-                $error_message = 'Error adding seedling: ' . $stmt->error;
+                // Bind parameters
+                $stmt->bind_param("ssdsssssi", $name, $description, $price, $image_path, $region, $height, $fruit, $purpose, $stock);
+
+                // Execute query
+                if ($stmt->execute()) {
+                    $success_message = 'Seedling added successfully!';
+                    header("Refresh:2; url=admin.php"); // Redirect after success
+                    exit;
+                } else {
+                    $error_message = 'Error adding seedling: ' . $stmt->error;
+                }
             }
         } else {
-            $error_message = 'Error uploading image.';
+            $error_message = 'Error moving uploaded image.';
         }
     } else {
         $error_message = 'Please upload a valid image.';
@@ -65,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p class="success-message"><?php echo htmlspecialchars($success_message); ?></p>
     <?php endif; ?>
 
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" id="seedling-form">
         <!-- Name -->
         <div class="form-column">
             <label for="name">Name:</label>
@@ -88,6 +102,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="form-column">
             <label for="image">Upload Image:</label>
             <input type="file" id="image" name="image" accept="image/*" required>
+            <div id="image-preview" style="margin-top: 10px;">
+                <?php if (!empty($image_preview)): ?>
+                    <img src="<?php echo htmlspecialchars($image_preview); ?>" alt="Preview" style="max-width: 100px; max-height: 100px;">
+                <?php endif; ?>
+            </div>
         </div>
 
         <!-- Region -->
@@ -111,8 +130,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- Height -->
         <div class="form-column">
             <label for="height">Height:</label>
-            <select id="height" name="height" required>
-                <option value="tall">Tall</option>
+            <select id="height" name="height">
+                <option value="tall" selected>Tall</option>
                 <option value="short">Short</option>
             </select>
         </div>
@@ -120,19 +139,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- Fruit -->
         <div class="form-column">
             <label for="fruit">Fruiting:</label>
-            <select id="fruit" name="fruit" required>
+            <select id="fruit" name="fruit">
                 <option value="edible">Edible</option>
-                <option value="non-edible">Non-Edible</option>
+                <option value="non-edible" selected>Non-Edible</option>
             </select>
         </div>
 
         <!-- Purpose -->
         <div class="form-column">
             <label for="purpose">Purpose:</label>
-            <select id="purpose" name="purpose" required>
+            <select id="purpose" name="purpose">
                 <option value="ornamental">Ornamental</option>
                 <option value="timber">Timber</option>
-                <option value="shade">Shade</option>
+                <option value="shade" selected>Shade</option>
             </select>
         </div>
 
@@ -149,11 +168,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 </section>
 
-
 <!-- Include TinyMCE for Rich Text Editing -->
 <script src="https://cdn.tiny.cloud/1/55w2doib0zah7klxck5dr4nvmik36cc3rmrnmtxuhbl51z96/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
-
     tinymce.init({
         selector: '#description', // Target the description textarea
         plugins: 'lists link image code',
@@ -161,6 +178,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         menubar: false,
         statusbar: false,
         height: 200,
+    });
+
+    // Image Preview Functionality
+    document.getElementById('image').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const previewDiv = document.getElementById('image-preview');
+                previewDiv.innerHTML = '<img src="' + e.target.result + '" alt="Preview" style="max-width: 100px; max-height: 100px;">';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            document.getElementById('image-preview').innerHTML = '';
+        }
     });
 </script>
 

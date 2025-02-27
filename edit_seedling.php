@@ -13,7 +13,7 @@ include 'php/db.php';
 $seedling_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($seedling_id <= 0) {
-    echo '<p>Invalid seedling ID.</p>';
+    echo '<p class="error-message">Invalid seedling ID.</p>';
     exit;
 }
 
@@ -27,7 +27,7 @@ $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     $seedling = $result->fetch_assoc();
 } else {
-    echo '<p>Seedling not found.</p>';
+    echo '<p class="error-message">Seedling not found.</p>';
     exit;
 }
 
@@ -35,79 +35,170 @@ $error_message = '';
 $success_message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Capture form data
     $name = trim($_POST['name']);
     $description = trim($_POST['description']);
-    $price = trim($_POST['price']);
+    $price = isset($_POST['price']) ? (float)$_POST['price'] : null;
     $region = trim($_POST['region']);
     $height = trim($_POST['height']);
     $fruit = trim($_POST['fruit']);
     $purpose = trim($_POST['purpose']);
+    $stock = isset($_POST['stock']) ? (int)$_POST['stock'] : 0;
 
-    if (empty($name) || empty($description) || empty($price) || empty($region) || empty($height) || empty($fruit) || empty($purpose)) {
-        $error_message = 'All fields are required!';
+    // Handle image upload (optional)
+    $image_path = $seedling['image']; // Keep existing image by default
+
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $tmp_name = $_FILES['image']['tmp_name'];
+        $file_name = basename($_FILES['image']['name']);
+        $upload_dir = 'images/';
+        $new_image_path = $upload_dir . $file_name;
+
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true); // Create directory if it doesn't exist
+        }
+
+        if (move_uploaded_file($tmp_name, $new_image_path)) {
+            // Delete old image if it exists
+            if ($seedling['image'] && file_exists($seedling['image'])) {
+                unlink($seedling['image']);
+            }
+
+            $image_path = $new_image_path; // Update image path
+        } else {
+            $error_message = 'Error uploading new image.';
+        }
+    }
+
+    // Update seedling details in the database
+    $update_sql = "UPDATE seedlings SET name = ?, description = ?, price = ?, image = ?, region = ?, height = ?, fruit = ?, purpose = ?, stock = ? WHERE id = ?";
+    $stmt = $conn->prepare($update_sql);
+
+    if (!$stmt) {
+        $error_message = 'Error preparing SQL statement: ' . $conn->error;
     } else {
-        // Update seedling details
-        $sql = "UPDATE seedlings SET name = ?, description = ?, price = ?, region = ?, height = ?, fruit = ?, purpose = ? WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssdsdssi", $name, $description, $price, $region, $height, $fruit, $purpose, $seedling_id);
+        $stmt->bind_param("ssdssssssi", $name, $description, $price, $image_path, $region, $height, $fruit, $purpose, $stock, $seedling_id);
 
         if ($stmt->execute()) {
             $success_message = 'Seedling updated successfully!';
+            header("Refresh:2; url=admin.php"); // Redirect after success
+            exit;
         } else {
-            $error_message = 'Error updating seedling: ' . htmlspecialchars($stmt->error);
+            $error_message = 'Error updating seedling: ' . $stmt->error;
         }
     }
 }
+?>
 
-echo '<section class="edit-seedling">';
-echo '<h2>Edit Seedling</h2>';
+<section class="edit-seedling">
+    <h2>Edit Seedling</h2>
 
-if (!empty($error_message)) {
-    echo '<p style="color: red;">' . htmlspecialchars($error_message) . '</p>';
-}
+    <?php if (!empty($error_message)): ?>
+        <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
+    <?php endif; ?>
 
-if (!empty($success_message)) {
-    echo '<p style="color: green;">' . htmlspecialchars($success_message) . '</p>';
-}
+    <?php if (!empty($success_message)): ?>
+        <p class="success-message"><?php echo htmlspecialchars($success_message); ?></p>
+    <?php endif; ?>
 
-echo '<form method="POST">';
-echo '<label for="name">Name:</label>';
-echo '<input type="text" id="name" name="name" value="' . htmlspecialchars($seedling['name'] ?? '') . '" required>';
+    <form method="POST" enctype="multipart/form-data">
+        <!-- Name -->
+        <div class="form-column">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($seedling['name']); ?>" required>
+        </div>
 
-echo '<label for="description">Description:</label>';
-echo '<textarea id="description" name="description" required>' . htmlspecialchars($seedling['description'] ?? '') . '</textarea>';
+        <!-- Description (Rich Text Editor) -->
+        <div class="form-column">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required><?php echo htmlspecialchars($seedling['description']); ?></textarea>
+        </div>
 
-echo '<label for="price">Price:</label>';
-echo '<input type="number" id="price" name="price" value="' . htmlspecialchars($seedling['price'] ?? '') . '" step="0.01" required>';
+        <!-- Price -->
+        <div class="form-column">
+            <label for="price">Price (KES):</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" value="<?php echo htmlspecialchars($seedling['price']); ?>" required>
+        </div>
 
-echo '<label for="region">Region:</label>';
-echo '<select id="region" name="region" required>';
-echo '<option value="nairobi" ' . (($seedling['region'] ?? '') === 'nairobi' ? 'selected' : '') . '>Nairobi</option>';
-echo '<option value="kitale" ' . (($seedling['region'] ?? '') === 'kitale' ? 'selected' : '') . '>Kitale</option>';
-echo '<option value="eldoret" ' . (($seedling['region'] ?? '') === 'eldoret' ? 'selected' : '') . '>Eldoret</option>';
-echo '</select>';
+        <!-- Image Upload -->
+        <div class="form-column">
+            <label for="image">Upload New Image (Optional):</label>
+            <input type="file" id="image" name="image" accept="image/*">
+            <p>Current Image: 
+                <img src="<?php echo htmlspecialchars($seedling['image'] ?? 'images/default-tree.jpg'); ?>" alt="<?php echo htmlspecialchars($seedling['name']); ?>" style="max-width: 100px; max-height: 100px;">
+            </p>
+        </div>
 
-echo '<label for="height">Tree Height:</label>';
-echo '<select id="height" name="height" required>';
-echo '<option value="tall" ' . (($seedling['height'] ?? '') === 'tall' ? 'selected' : '') . '>Tall Trees</option>';
-echo '<option value="short" ' . (($seedling['height'] ?? '') === 'short' ? 'selected' : '') . '>Short Trees</option>';
-echo '</select>';
+        <!-- Region -->
+        <div class="form-column">
+            <label for="region">Region:</label>
+            <select id="region" name="region" required>
+                <option value="Central Highlands" <?php echo ($seedling['region'] == 'Central Highlands') ? 'selected' : ''; ?>>Central Highlands</option>
+                <option value="Lake Victoria Basin and Highlands" <?php echo ($seedling['region'] == 'Lake Victoria Basin and Highlands') ? 'selected' : ''; ?>>Lake Victoria Basin and Highlands</option>
+                <option value="North-western" <?php echo ($seedling['region'] == 'North-western') ? 'selected' : ''; ?>>North-western</option>
+                <option value="North-eastern" <?php echo ($seedling['region'] == 'North-eastern') ? 'selected' : ''; ?>>North-eastern</option>
+                <option value="South-eastern" <?php echo ($seedling['region'] == 'South-eastern') ? 'selected' : ''; ?>>South-eastern</option>
+                <option value="The Coastal strip" <?php echo ($seedling['region'] == 'The Coastal strip') ? 'selected' : ''; ?>>The Coastal strip</option>
+                <option value="Rift Valley" <?php echo ($seedling['region'] == 'Rift Valley') ? 'selected' : ''; ?>>Rift Valley</option>
+                <option value="East African Rift valley" <?php echo ($seedling['region'] == 'East African Rift valley') ? 'selected' : ''; ?>>East African Rift valley</option>
+                <option value="Kerio valley" <?php echo ($seedling['region'] == 'Kerio valley') ? 'selected' : ''; ?>>Kerio valley</option>
+                <option value="Elegeyo valley" <?php echo ($seedling['region'] == 'Elegeyo valley') ? 'selected' : ''; ?>>Elegeyo valley</option>
+                <option value="Lower Kerio and Suguta valleys" <?php echo ($seedling['region'] == 'Lower Kerio and Suguta valleys') ? 'selected' : ''; ?>>Lower Kerio and Suguta valleys</option>
+            </select>
+        </div>
 
-echo '<label for="fruit">Fruiting Trees:</label>';
-echo '<select id="fruit" name="fruit" required>';
-echo '<option value="edible" ' . (($seedling['fruit'] ?? '') === 'edible' ? 'selected' : '') . '>Edible Fruiting Trees</option>';
-echo '<option value="non-edible" ' . (($seedling['fruit'] ?? '') === 'non-edible' ? 'selected' : '') . '>Non-Edible Trees</option>';
-echo '</select>';
+        <!-- Height -->
+        <div class="form-column">
+            <label for="height">Height:</label>
+            <select id="height" name="height" required>
+                <option value="tall" <?php echo ($seedling['height'] == 'tall') ? 'selected' : ''; ?>>Tall</option>
+                <option value="short" <?php echo ($seedling['height'] == 'short') ? 'selected' : ''; ?>>Short</option>
+            </select>
+        </div>
 
-echo '<label for="purpose">Purpose:</label>';
-echo '<select id="purpose" name="purpose" required>';
-echo '<option value="ornamental" ' . (($seedling['purpose'] ?? '') === 'ornamental' ? 'selected' : '') . '>Ornamental</option>';
-echo '<option value="timber" ' . (($seedling['purpose'] ?? '') === 'timber' ? 'selected' : '') . '>Timber</option>';
-echo '<option value="shade" ' . (($seedling['purpose'] ?? '') === 'shade' ? 'selected' : '') . '>Shade</option>';
-echo '</select>';
+        <!-- Fruit -->
+        <div class="form-column">
+            <label for="fruit">Fruiting:</label>
+            <select id="fruit" name="fruit" required>
+                <option value="edible" <?php echo ($seedling['fruit'] == 'edible') ? 'selected' : ''; ?>>Edible</option>
+                <option value="non-edible" <?php echo ($seedling['fruit'] == 'non-edible') ? 'selected' : ''; ?>>Non-Edible</option>
+            </select>
+        </div>
 
-echo '<button type="submit">Update Seedling</button>';
-echo '</form>';
-echo '</section>';
+        <!-- Purpose -->
+        <div class="form-column">
+            <label for="purpose">Purpose:</label>
+            <select id="purpose" name="purpose" required>
+                <option value="ornamental" <?php echo ($seedling['purpose'] == 'ornamental') ? 'selected' : ''; ?>>Ornamental</option>
+                <option value="timber" <?php echo ($seedling['purpose'] == 'timber') ? 'selected' : ''; ?>>Timber</option>
+                <option value="shade" <?php echo ($seedling['purpose'] == 'shade') ? 'selected' : ''; ?>>Shade</option>
+            </select>
+        </div>
 
-include 'php/footer.php'; ?>
+        <!-- Stock -->
+        <div class="form-column">
+            <label for="stock">Number in Stock:</label>
+            <input type="number" id="stock" name="stock" min="0" value="<?php echo htmlspecialchars($seedling['stock'] ?? 0); ?>" required>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+            <button type="submit" class="button">Update Seedling</button>
+        </div>
+    </form>
+</section>
+
+<!-- Include TinyMCE for Rich Text Editing -->
+<script src="https://cdn.tiny.cloud/1/55w2doib0zah7klxck5dr4nvmik36cc3rmrnmtxuhbl51z96/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+        selector: '#description', // Target the description textarea
+        plugins: 'lists link image code',
+        toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright | numlist bullist | link image',
+        menubar: false,
+        statusbar: false,
+        height: 200,
+    });
+</script>
+
+<?php include 'php/footer.php'; ?>
