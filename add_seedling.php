@@ -1,5 +1,6 @@
 <?php
 include 'php/init.php'; // Start session and initialize configurations
+include 'php/header.php';
 
 // Check if the user is an admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {

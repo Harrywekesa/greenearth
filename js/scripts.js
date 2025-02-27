@@ -93,3 +93,22 @@ function validateForm() {
     return true;
 }
 
+document.getElementById('seedling-form').addEventListener('submit', function (event) {
+    const imageInput = document.getElementById('image');
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+    if (!allowedTypes.includes(imageInput.files[0].type)) {
+        event.preventDefault(); // Prevent form submission
+        alert('Please upload a valid image file (JPEG, PNG, GIF).');
+    }
+});
+
+document.getElementById('seedling-form').addEventListener('submit', function (event) {
+    const imageInput = document.getElementById('image');
+    const maxSize = 2 * 1024 * 1024; // 2MB
+
+    if (imageInput.files[0].size > maxSize) {
+        event.preventDefault(); // Prevent form submission
+        alert('Image size exceeds the limit of 2MB.');
+    }
+});

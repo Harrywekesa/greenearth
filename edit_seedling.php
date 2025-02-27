@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $tmp_name = $_FILES['image']['tmp_name'];
         $file_name = basename($_FILES['image']['name']);
-        $upload_dir = 'images/';
+        $upload_dir = 'images/seedlings/';
         $new_image_path = $upload_dir . $file_name;
 
         if (!is_dir($upload_dir)) {
@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p class="success-message"><?php echo htmlspecialchars($success_message); ?></p>
     <?php endif; ?>
 
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" id="seedling-form">
         <!-- Name -->
         <div class="form-column">
             <label for="name">Name:</label>
@@ -118,15 +118,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="form-column">
             <label for="price">Price (KES):</label>
             <input type="number" id="price" name="price" step="0.01" min="0" value="<?php echo htmlspecialchars($seedling['price']); ?>" required>
-        </div>
-
-        <!-- Image Upload -->
-        <div class="form-column">
-            <label for="image">Upload New Image (Optional):</label>
-            <input type="file" id="image" name="image" accept="image/*">
-            <p>Current Image: 
-                <img src="<?php echo htmlspecialchars($seedling['image'] ?? 'images/default-tree.jpg'); ?>" alt="<?php echo htmlspecialchars($seedling['name']); ?>" style="max-width: 100px; max-height: 100px;">
-            </p>
         </div>
 
         <!-- Region -->
@@ -181,6 +172,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="number" id="stock" name="stock" min="0" value="<?php echo htmlspecialchars($seedling['stock'] ?? 0); ?>" required>
         </div>
 
+        <!-- Image Upload -->
+        <div class="form-column">
+            <label for="image">Upload New Image (Optional):</label>
+            <input type="file" id="image" name="image" accept="image/*">
+            <p>Current Image: 
+                <img src="<?php echo htmlspecialchars($seedling['image'] ?? 'images/default-tree.jpg'); ?>" alt="<?php echo htmlspecialchars($seedling['name']); ?>" style="max-width: 100px; max-height: 100px;">
+            </p>
+        </div>
+
         <!-- Submit Button -->
         <div class="form-actions">
             <button type="submit" class="button">Update Seedling</button>
@@ -198,6 +198,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         menubar: false,
         statusbar: false,
         height: 200,
+    });
+
+    // Image Preview Functionality
+    document.getElementById('image').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const previewDiv = document.querySelector('.form-column img');
+                if (previewDiv) {
+                    previewDiv.src = e.target.result; // Update preview image
+                }
+            };
+            reader.readAsDataURL(file);
+        }
     });
 </script>
 

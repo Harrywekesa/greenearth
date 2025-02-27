@@ -87,11 +87,15 @@ By leveraging digital technology, GreenEarth simplifies access to information, p
     <div class="testimonial-slider">
         <div class="testimonial">
             <p>"GreenEarth has transformed my community by teaching us sustainable practices and providing access to quality seedlings."</p>
-            <cite>- Jane Doe, Kitale Resident</cite>
+            <cite>- Jane Kinyoro, Kitale Resident</cite>
         </div>
         <div class="testimonial">
             <p>"I started my own tree nursery business thanks to the training programs offered by GreenEarth!"</p>
-            <cite>- John Smith, Eco-Entrepreneur</cite>
+            <cite>- John Wafula, Eco-Entrepreneur</cite>
+        </div>
+        <div class="testimonial">
+            <p>"Planting trees with this group was a blast! It felt great to dig in and help the planet. I'm proud knowing those trees will grow and make a difference. Join in---it's worth it!."</p>
+            <cite>- Rodgers Kimutai, Kitale Resident</cite>
         </div>
         <div class="testimonial">
             <p>"Planting trees with GreenEarth has been an amazing experience. Together, we're making Kenya greener!"</p>

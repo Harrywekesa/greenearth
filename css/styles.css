@@ -1596,10 +1596,7 @@ form button:hover {
 
 .add-seedling form {
     width: 100%;
-    max-width: 1200px; /* Limit width for large screens */
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Distribute items evenly in columns */
-    gap: 20px;
+    max-width: 800px;
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -1607,9 +1604,11 @@ form button:hover {
     padding: 20px;
 }
 
+/* Form Columns */
 .add-seedling .form-column {
     display: flex;
     flex-direction: column;
+    margin-bottom: 15px;
 }
 
 .add-seedling label {
@@ -1623,7 +1622,6 @@ form button:hover {
 .add-seedling select {
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -1639,15 +1637,36 @@ form button:hover {
 .add-seedling textarea {
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
     transition: border-color 0.3s ease;
+    height: 200px;
+    resize: vertical; /* Allow resizing vertically */
 }
 
 .add-seedling textarea:focus {
     border-color: #4CAF50;
+}
+
+/* Image Preview */
+.add-seedling #image-preview {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.add-seedling #image-preview img {
+    max-width: 100px;
+    max-height: 100px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Submit Button */
+.add-seedling .form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 .add-seedling button {
@@ -1688,6 +1707,228 @@ form button:hover {
 /* Responsive Design */
 @media (max-width: 768px) {
     .add-seedling form {
+        padding: 15px;
+    }
+
+    .add-seedling input[type="text"],
+    .add-seedling input[type="number"],
+    .add-seedling select,
+    .add-seedling textarea {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .add-seedling button {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .add-seedling h2 {
+        font-size: 24px;
+    }
+
+    .add-seedling .form-column {
+        margin-bottom: 10px;
+    }
+
+    .add-seedling input[type="text"],
+    .add-seedling input[type="number"],
+    .add-seedling select,
+    .add-seedling textarea {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .add-seedling button {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+/* Error and Success Messages */
+.error-message,
+.success-message {
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.error-message {
+    background-color: #fdd;
+    color: red;
+}
+
+.success-message {
+    background-color: #dff;
+    color: green;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .add-seedling form {
         grid-template-columns: 1fr; /* Stack items vertically on smaller screens */
     }
+}
+
+/* Edit Seedling Page */
+.edit-seedling {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Fit the entire viewport */
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+.edit-seedling h2 {
+    font-size: 28px;
+    color: #4CAF50;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.edit-seedling form {
+    width: 100%; /* Use full width on large screens */
+    max-width: 1200px; /* Limit width for very large screens */
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: grid;
+    gap: 20px; /* Add spacing between fields */
+}
+
+/* Large Screen Layout */
+@media (min-width: 768px) {
+    .edit-seedling form {
+        grid-template-columns: repeat(2, 1fr); /* Two columns for large screens */
+    }
+
+    .edit-seedling .form-column:nth-child(odd) {
+        grid-column: 1 / 2; /* Place odd fields in the first column */
+    }
+
+    .edit-seedling .form-column:nth-child(even) {
+        grid-column: 2 / 3; /* Place even fields in the second column */
+    }
+
+    .edit-seedling .form-actions {
+        grid-column: span 2; /* Center the submit button across both columns */
+    }
+}
+
+/* Small Screen Layout */
+@media (max-width: 768px) {
+    .edit-seedling form {
+        grid-template-columns: 1fr; /* Single column for small screens */
+    }
+
+    .edit-seedling .form-column {
+        margin-bottom: 15px; /* Add spacing between fields */
+    }
+
+    .edit-seedling .form-actions {
+        margin-top: 20px; /* Add spacing above the submit button */
+    }
+}
+
+/* Form Field Styling */
+.edit-seedling .form-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-seedling label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.edit-seedling input[type="text"],
+.edit-seedling input[type="number"],
+.edit-seedling select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.edit-seedling input[type="text"]:focus,
+.edit-seedling input[type="number"]:focus,
+.edit-seedling select:focus {
+    border-color: #4CAF50;
+}
+
+.edit-seedling textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    resize: vertical; /* Allow resizing vertically */
+    height: 200px;
+}
+
+.edit-seedling textarea:focus {
+    border-color: #4CAF50;
+}
+
+/* Image Preview */
+.edit-seedling .form-column img {
+    max-width: 100px;
+    max-height: 100px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 10px;
+    object-fit: cover; /* Ensure images don't stretch */
+}
+
+/* Submit Button */
+.edit-seedling .form-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.edit-seedling button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.edit-seedling button:hover {
+    background-color: #3e8e41;
+}
+
+/* Error and Success Messages */
+.error-message,
+.success-message {
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.error-message {
+    background-color: #fdd;
+    color: red;
+}
+
+.success-message {
+    background-color: #dff;
+    color: green;
 }
