@@ -1,6 +1,6 @@
 <?php 
 include 'php/init.php'; // Start session and initialize configurations
-include 'php/header.php'; 
+//include 'php/header.php'; 
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 include 'php/db.php';
+
 $user_id = $_SESSION['user_id'];
 $program_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
@@ -45,13 +46,28 @@ if ($program_result->num_rows > 0) {
     echo '<p>Program not found.</p>';
     exit;
 }
+
+// Fetch certificate settings
+$settings_sql = "SELECT * FROM certificate_settings LIMIT 1";
+$settings_result = $conn->query($settings_sql);
+
+if ($settings_result->num_rows > 0) {
+    $settings = $settings_result->fetch_assoc();
+} else {
+    $settings = [
+        'logo_greenearth' => 'images/logo.png',
+        'logo_kenya' => 'images/kenya-logo.png',
+        'signature_ceo' => 'images/default-signature.png',
+        'ceo_name' => 'John Doe'
+    ];
+}
 ?>
 
 <section class="certificate">
     <header class="certificate-header">
-        <!-- Logos -->
-        <img src="images/logo.png" alt="GreenEarth Logo" class="greenearth-logo">
-        <img src="images/kenya-logo.png" alt="Republic of Kenya Logo" class="kenya-logo">
+        <!-- Custom Logos -->
+        <img src="<?php echo htmlspecialchars($settings['logo_greenearth']); ?>" alt="GreenEarth Logo" class="greenearth-logo">
+        <img src="<?php echo htmlspecialchars($settings['logo_kenya']); ?>" alt="Republic of Kenya Logo" class="kenya-logo">
     </header>
 
     <h1>Certificate of Completion</h1>
@@ -63,6 +79,13 @@ if ($program_result->num_rows > 0) {
     <p><strong>Location:</strong> <?php echo htmlspecialchars($program['location']); ?></p>
     <p><strong>Date Completed:</strong> <?php echo date("F j, Y"); ?></p>
     <p>Issued by GreenEarth in collaboration with the Republic of Kenya.</p>
+
+    <!-- CEO Signature -->
+    <div class="ceo-signature">
+        <img src="<?php echo htmlspecialchars($settings['signature_ceo']); ?>" alt="CEO Signature" class="signature-image">
+        <p><strong><?php echo htmlspecialchars($settings['ceo_name']); ?></strong></p>
+        <p>Chief Executive Officer</p>
+    </div>
 
     <!-- Download Button -->
     <button onclick="downloadCertificate()" class="download-button">Download Certificate</button>
@@ -76,7 +99,7 @@ if ($program_result->num_rows > 0) {
         border: 2px solid #4CAF50;
         border-radius: 10px;
         background-color: #f9f9f9;
-        margin: 50px auto;
+        margin: 80px auto; /* Add space below the fixed header */
         max-width: 600px;
         font-family: Arial, sans-serif;
         position: relative; /* For logo positioning */
@@ -117,6 +140,24 @@ if ($program_result->num_rows > 0) {
         margin: 5px 0;
     }
 
+    /* CEO Signature */
+    .ceo-signature {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .ceo-signature img {
+        max-width: 150px;
+        max-height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .ceo-signature p {
+        font-size: 14px;
+        margin: 5px 0;
+    }
+
+    /* Download Button */
     .download-button {
         background-color: #4CAF50;
         color: white;
@@ -150,8 +191,12 @@ if ($program_result->num_rows > 0) {
 
         // Add the certificate content to the PDF
         pdf.html(certificateContent, {
-            callback: function (pdf) {
-                pdf.save('certificate.pdf'); // Save the PDF with a filename
+            callback: function (pdfDoc) {
+                try {
+                    pdfDoc.save('certificate.pdf'); // Save the PDF with a filename
+                } catch (error) {
+                    alert('Error generating PDF: ' + error.message);
+                }
             },
             x: 10, // Horizontal offset
             y: 10, // Vertical offset
@@ -160,4 +205,3 @@ if ($program_result->num_rows > 0) {
     }
 </script>
 
-<?php include 'php/footer.php'; ?>
