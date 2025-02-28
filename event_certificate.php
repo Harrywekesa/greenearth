@@ -1,6 +1,5 @@
 <?php 
 include 'php/init.php'; // Start session and initialize configurations
-include 'php/header.php'; 
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -10,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 include 'php/db.php';
+
 $user_id = $_SESSION['user_id'];
 $event_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
@@ -45,24 +45,52 @@ if ($event_result->num_rows > 0) {
     echo '<p>Event not found.</p>';
     exit;
 }
+
+// Fetch certificate settings
+$settings_sql = "SELECT * FROM certificate_settings LIMIT 1";
+$settings_result = $conn->query($settings_sql);
+
+if ($settings_result->num_rows > 0) {
+    $settings = $settings_result->fetch_assoc();
+} else {
+    $settings = [
+        'logo_greenearth' => 'images/logo.png',
+        'logo_kenya' => 'images/kenya-logo.png',
+        'signature_ceo' => 'images/default-signature.png',
+        'ceo_name' => 'John Doe'
+    ];
+}
 ?>
 
 <section class="certificate">
     <header class="certificate-header">
-        <!-- Logos -->
-        <img src="images/logo.png" alt="GreenEarth Logo" class="greenearth-logo">
-        <img src="images/kenya-logo.png" alt="Republic of Kenya Logo" class="kenya-logo">
+        <!-- Custom Logos -->
+        <img src="<?php echo htmlspecialchars($settings['logo_greenearth']); ?>" alt="GreenEarth Logo" class="greenearth-logo">
+        <img src="<?php echo htmlspecialchars($settings['logo_kenya']); ?>" alt="Republic of Kenya Logo" class="kenya-logo">
     </header>
 
     <h1>Certificate of Participation</h1>
     <p>This certifies that</p>
-    <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name'] ?? 'Guest'); ?></h2>
+    <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
     <p>participated in the event:</p>
-    <h3><?php echo htmlspecialchars($event['title'] ?? 'Unknown Event'); ?></h3>
-    <p><strong>Date:</strong> <?php echo htmlspecialchars(date("F j, Y", strtotime($event['event_date'] ?? ''))); ?></p>
+    <h3><?php echo htmlspecialchars($event['title']); ?></h3>
+    <p><strong>Date:</strong> <?php echo htmlspecialchars(date("F j, Y", strtotime($event['event_date']))); ?></p>
     <p><strong>Location:</strong> <?php echo htmlspecialchars($event['location'] ?? 'Not specified'); ?></p>
     <p><strong>Date Participated:</strong> <?php echo date("F j, Y"); ?></p>
     <p>Issued by GreenEarth in collaboration with the Republic of Kenya.</p>
+
+    <!-- CEO Signature -->
+    <div class="ceo-signature">
+        <img src="<?php echo htmlspecialchars($settings['signature_ceo']); ?>" alt="CEO Signature" class="signature-image">
+        <p><strong><?php echo htmlspecialchars($settings['ceo_name']); ?></strong></p>
+        <p>Chief Executive Officer</p>
+    </div>
+
+    <!-- Download Button -->
+    <button onclick="downloadCertificate()" class="download-button">Download Certificate</button>
+
+    <!-- Print Button -->
+    <button onclick="printCertificate()" class="print-button">Print Certificate</button>
 </section>
 
 <style>
@@ -73,8 +101,8 @@ if ($event_result->num_rows > 0) {
         border: 2px solid #4CAF50;
         border-radius: 10px;
         background-color: #f9f9f9;
-        margin: 50px auto;
-        max-width: 800px;
+        margin: 80px auto; /* Add space below the fixed header */
+        max-width: 600px;
         font-family: Arial, sans-serif;
         position: relative; /* For logo positioning */
     }
@@ -113,12 +141,87 @@ if ($event_result->num_rows > 0) {
         font-size: 16px;
         margin: 5px 0;
     }
+
+    /* CEO Signature */
+    .ceo-signature {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .ceo-signature img {
+        max-width: 150px;
+        max-height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .ceo-signature p {
+        font-size: 14px;
+        margin: 5px 0;
+    }
+
+    /* Buttons */
+    .download-button, .print-button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+    }
+
+    .download-button:hover, .print-button:hover {
+        background-color: #3e8e41;
+    }
+
+    .print-button {
+        margin-left: 10px;
+    }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-    window.onload = function () {
-        showModal("Your participation certificate has been generated!");
-    };
+    function downloadCertificate() {
+        const { jsPDF } = window.jspdf;
+
+        // Get the certificate content
+        const certificateContent = document.querySelector('.certificate').innerHTML;
+
+        // Create a new PDF instance
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        // Add the certificate content to the PDF
+        pdf.html(certificateContent, {
+            callback: function (pdfDoc) {
+                try {
+                    pdfDoc.save('certificate.pdf'); // Save the PDF with a filename
+                } catch (error) {
+                    alert('Error generating PDF: ' + error.message);
+                }
+            },
+            x: 10, // Horizontal offset
+            y: 10, // Vertical offset
+            width: 190 // Width of the content in the PDF
+        });
+    }
+
+    function printCertificate() {
+        // Hide buttons during printing
+        const buttons = document.querySelectorAll('.download-button, .print-button');
+        buttons.forEach(button => button.style.visibility = 'hidden');
+
+        // Print the certificate
+        window.print();
+
+        // Show buttons after printing
+        setTimeout(() => {
+            buttons.forEach(button => button.style.visibility = 'visible');
+        }, 100);
+    }
 </script>
 
-<?php include 'php/footer.php'; ?>
