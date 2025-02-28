@@ -1,6 +1,5 @@
 <?php
 include 'php/init.php'; // Start session and initialize configurations
-include 'php/header.php';
 
 // Check if the user is an admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
@@ -29,6 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt->execute()) {
             $success_message = 'Training program added successfully!';
+            header("Refresh:2; url=admin.php"); // Redirect after success
+            exit;
         } else {
             $error_message = 'Error adding program: ' . $stmt->error;
         }
